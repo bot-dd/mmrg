@@ -5,6 +5,9 @@ from logging.handlers import RotatingFileHandler
 import time
 import sys
 from helpers.msg_utils import MakeButtons
+# --- MODIFIED START ---
+import aiohttp
+# --- MODIFIED END ---
 
 """Some Constants"""
 MERGE_MODE = {}  # Maintain each user merge_mode
@@ -18,6 +21,12 @@ gDict = defaultdict(lambda: [])
 queueDB = {}
 formatDB = {}
 replyDB = {}
+# --- MODIFIED START ---
+# For metadata editing
+METADATA_TITLE = "title"
+METADATA_DESCRIPTION = "description"
+METADATA_TAGS = "tags"
+# --- MODIFIED END ---
 
 VIDEO_EXTENSIONS = ["mkv", "mp4", "webm", "ts", "wav", "mov"]
 AUDIO_EXTENSIONS = ["aac", "ac3", "eac3", "m4a", "mka", "thd", "dts", "mp3"]
@@ -37,6 +46,26 @@ logging.basicConfig(
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("PIL").setLevel(logging.WARNING)
+# --- MODIFIED START ---
+# Add logging for new libs if needed
+logging.getLogger("yt_dlp").setLevel(logging.WARNING)
+logging.getLogger("aiohttp").setLevel(logging.WARNING)
+
+# Global aiohttp session
+AIO_SESSION = None
+
+async def get_aio_session():
+    global AIO_SESSION
+    if AIO_SESSION is None:
+        AIO_SESSION = aiohttp.ClientSession()
+    return AIO_SESSION
+
+async def close_aio_session():
+    global AIO_SESSION
+    if AIO_SESSION:
+        await AIO_SESSION.close()
+        AIO_SESSION = None
+# --- MODIFIED END ---
 
 LOGGER = logging.getLogger(__name__)
 BROADCAST_MSG = """
@@ -44,3 +73,4 @@ BROADCAST_MSG = """
 Done: {}**
 """
 bMaker = MakeButtons()
+# --- END OF FILE MERGE-BOT-master/__init__.py ---
