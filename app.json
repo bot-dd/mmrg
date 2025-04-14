@@ -5,7 +5,9 @@
 		"telegram",
 		"video",
 		"merge",
-		"bot"
+		"bot",
+        "download",
+        "yt-dlp"
 	],
 	"repository": "https://github.com/yashoswalyo/MERGE-BOT",
 	"website": "https://telegram.dog/yashoswalyo",
