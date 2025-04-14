@@ -56,14 +56,16 @@ AIO_SESSION = None
 
 async def get_aio_session():
     global AIO_SESSION
-    if AIO_SESSION is None:
+    if AIO_SESSION is None or AIO_SESSION.closed: # Check if closed
         AIO_SESSION = aiohttp.ClientSession()
+        logging.info("Created new aiohttp ClientSession.")
     return AIO_SESSION
 
 async def close_aio_session():
     global AIO_SESSION
-    if AIO_SESSION:
+    if AIO_SESSION and not AIO_SESSION.closed: # Check if exists and not closed
         await AIO_SESSION.close()
+        logging.info("Closed aiohttp ClientSession.")
         AIO_SESSION = None
 # --- MODIFIED END ---
 
@@ -73,4 +75,3 @@ BROADCAST_MSG = """
 Done: {}**
 """
 bMaker = MakeButtons()
-# --- END OF FILE MERGE-BOT-master/__init__.py ---
