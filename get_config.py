@@ -20,10 +20,12 @@ try:
 except Exception as e:
     LOGGER.error(e)
     pass
+
 load_dotenv(
     "config.env",
     override=True,
 )
+
 # tired of redeploying :(
 UPSTREAM_REPO = os.environ.get('UPSTREAM_REPO')
 UPSTREAM_BRANCH = os.environ.get('UPSTREAM_BRANCH')
@@ -55,3 +57,19 @@ if UPSTREAM_REPO is not None:
         LOGGER.info('Successfully updated with latest commit from UPSTREAM_REPO')
     else:
         LOGGER.warning('Something went wrong while updating, check UPSTREAM_REPO if valid or not!')
+
+# Add Flask health check
+from flask import Flask
+import threading
+
+app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    return 'Bot is alive!', 200
+
+def run_flask():
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+threading.Thread(target=run_flask).start()
